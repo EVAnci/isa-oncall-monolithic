@@ -1,0 +1,9 @@
+export enum ResultadoEscalamiento {
+  NOTIFICADO = 'NOTIFICADO',
+
+  SIN_DESTINATARIO = 'SIN_DESTINATARIO',
+
+  SIN_POLITICA = 'SIN_POLITICA',
+
+  AGOTADO = 'AGOTADO',
+}

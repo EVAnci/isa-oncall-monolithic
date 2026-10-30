@@ -1,0 +1,186 @@
+<div>
+  <h2 id="page-heading" data-cy="EjecucionDeEscalamientoHeading">
+    <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.home.title">Ejecucion De Escalamientos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-ejecucion-de-escalamiento"
+        [routerLink]="['/ejecucion-de-escalamiento/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.home.createLabel">Crear nuevo Ejecucion De Escalamiento</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (ejecucionDeEscalamientos().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.home.notFound">Ningún Ejecucion De Escalamientos encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="vuelta">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.vuelta">Vuelta</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nivel">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.nivel">Nivel</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="resultado">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.resultado">Resultado</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="ejecutadoEn">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.ejecutadoEn">Ejecutado En</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="proximoEn">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.proximoEn">Proximo En</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="detalle">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.detalle">Detalle</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="incidente.titulo">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.incidente">Incidente</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="paso.orden">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.paso">Paso</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="destinatario.login">
+              <div class="d-flex">
+                <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.destinatario">Destinatario</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
+          @for (ejecucionDeEscalamiento of ejecucionDeEscalamientos(); track trackId(ejecucionDeEscalamiento)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/ejecucion-de-escalamiento', ejecucionDeEscalamiento.id, 'view']">{{ ejecucionDeEscalamiento.id }}</a>
+              </td>
+              <td>{{ ejecucionDeEscalamiento.vuelta }}</td>
+              <td>{{ ejecucionDeEscalamiento.nivel }}</td>
+              <td [jhiTranslate]="'oncallApp.ResultadoEscalamiento.' + (ejecucionDeEscalamiento.resultado ?? 'null')">
+                {{
+                  {
+                    null: '',
+                    NOTIFICADO: 'NOTIFICADO',
+                    SIN_DESTINATARIO: 'SIN_DESTINATARIO',
+                    SIN_POLITICA: 'SIN_POLITICA',
+                    AGOTADO: 'AGOTADO',
+                  }[ejecucionDeEscalamiento.resultado ?? 'null']
+                }}
+              </td>
+              <td>{{ ejecucionDeEscalamiento.ejecutadoEn | formatMediumDatetime }}</td>
+              <td>{{ ejecucionDeEscalamiento.proximoEn | formatMediumDatetime }}</td>
+              <td>{{ ejecucionDeEscalamiento.detalle }}</td>
+              <td>
+                @if (ejecucionDeEscalamiento.incidente) {
+                  <div>
+                    <a [routerLink]="['/incidente', ejecucionDeEscalamiento.incidente.id, 'view']">{{
+                      ejecucionDeEscalamiento.incidente.titulo
+                    }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (ejecucionDeEscalamiento.paso) {
+                  <div>
+                    <a [routerLink]="['/paso-escalamiento', ejecucionDeEscalamiento.paso.id, 'view']">{{
+                      ejecucionDeEscalamiento.paso.orden
+                    }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                {{ ejecucionDeEscalamiento.destinatario?.login }}
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/ejecucion-de-escalamiento', ejecucionDeEscalamiento.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/ejecucion-de-escalamiento', ejecucionDeEscalamiento.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+                  </a>
+
+                  <button
+                    type="submit"
+                    (click)="delete(ejecucionDeEscalamiento)"
+                    class="btn btn-danger btn-sm"
+                    data-cy="entityDeleteButton"
+                  >
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

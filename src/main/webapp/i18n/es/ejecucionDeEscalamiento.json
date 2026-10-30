@@ -1,0 +1,32 @@
+{
+  "oncallApp": {
+    "ejecucionDeEscalamiento": {
+      "home": {
+        "title": "Ejecucion De Escalamientos",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Ejecucion De Escalamiento",
+        "createOrEditLabel": "Crear o editar Ejecucion De Escalamiento",
+        "notFound": "Ningún Ejecucion De Escalamientos encontrado"
+      },
+      "created": "Un nuevo Ejecucion De Escalamiento ha sido creado con el identificador {{ param }}",
+      "updated": "Un Ejecucion De Escalamiento ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Ejecucion De Escalamiento ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Ejecucion De Escalamiento {{ id }}?"
+      },
+      "detail": {
+        "title": "Ejecucion De Escalamiento"
+      },
+      "id": "ID",
+      "vuelta": "Vuelta",
+      "nivel": "Nivel",
+      "resultado": "Resultado",
+      "ejecutadoEn": "Ejecutado En",
+      "proximoEn": "Proximo En",
+      "detalle": "Detalle",
+      "incidente": "Incidente",
+      "paso": "Paso",
+      "destinatario": "Destinatario"
+    }
+  }
+}

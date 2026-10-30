@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        Added the entity EjecucionDeEscalamiento.
+    -->
+    <changeSet id="20261023230558-1" author="jhipster">
+        <createTable tableName="ejecucion_de_escalamiento" remarks="Cada escalon que la cadena de escalamiento ejecuto sobre un incidente.\nEs la auditoria del escalamiento y tambien su memoria: el proceso que\ndespierta mira la ultima fila para saber por donde va.">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="vuelta" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="nivel" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="resultado" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="ejecutado_en" type="${datetimeType}">
+                <constraints nullable="false" />
+            </column>
+            <column name="proximo_en" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="detalle" type="varchar(500)">
+                <constraints nullable="true" />
+            </column>
+            <column name="incidente_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="paso_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="destinatario_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
+        </createTable>
+        <dropDefaultValue tableName="ejecucion_de_escalamiento" columnName="ejecutado_en" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="ejecucion_de_escalamiento" columnName="proximo_en" columnDataType="${datetimeType}"/>
+    </changeSet>
+
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
+
+    <!--
+        Load sample data generated with Faker.js
+        - This data can be easily edited using a CSV editor (or even MS Excel) and
+          is located in the 'src/main/resources/config/liquibase/fake-data' directory
+        - By default this data is applied when running with the JHipster 'dev' profile.
+          This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
+          Spring Boot configuration key.
+    -->
+    <changeSet id="20261023230558-1-data" author="jhipster" context="faker">
+        <loadData
+                  file="../fake-data/ejecucion_de_escalamiento.csv"
+                  relativeToChangelogFile="true"
+                  separator=";"
+                  tableName="ejecucion_de_escalamiento"
+                  usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="vuelta" type="numeric"/>
+            <column name="nivel" type="numeric"/>
+            <column name="resultado" type="string"/>
+            <column name="ejecutado_en" type="date"/>
+            <column name="proximo_en" type="date"/>
+            <column name="detalle" type="string"/>
+            <column name="incidente_id" type="numeric"/>
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
+        </loadData>
+    </changeSet>
+</databaseChangeLog>

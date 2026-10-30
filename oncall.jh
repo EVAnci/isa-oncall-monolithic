@@ -114,6 +114,7 @@ entity Incidente {
   resueltoEn Instant
   usuariosAfectados Integer min(0)
   cumplioObjetivo Boolean
+  silenciadoHasta Instant
 }
 
 /**
@@ -164,6 +165,7 @@ entity TurnoDeGuardia {
   desde Instant required
   hasta Instant required
   esReemplazo Boolean
+  rol RolDeGuardia
   nota String maxlength(255)
 }
 
@@ -186,8 +188,30 @@ entity PasoEscalamiento {
   canal Canal required
 }
 
+/**
+ * Cada escalon que la cadena de escalamiento ejecuto sobre un incidente.
+ * Es la auditoria del escalamiento y tambien su memoria: el proceso que
+ * despierta mira la ultima fila para saber por donde va.
+ */
+entity EjecucionDeEscalamiento {
+  vuelta Integer required min(0) max(5)
+  nivel Integer required min(0) max(10)
+  resultado ResultadoEscalamiento required
+  ejecutadoEn Instant required
+  proximoEn Instant
+  detalle String maxlength(500)
+}
+
 enum TipoRotacion {
   DIARIA, SEMANAL, PERSONALIZADA
+}
+
+enum RolDeGuardia {
+  PRIMARIO, SECUNDARIO
+}
+
+enum ResultadoEscalamiento {
+  NOTIFICADO, SIN_DESTINATARIO, SIN_POLITICA, AGOTADO
 }
 
 enum Canal {
@@ -263,6 +287,8 @@ relationship ManyToOne {
   PoliticaEscalamiento{servicio(nombre) required} to Servicio{politica}
   PasoEscalamiento{politica(nombre) required} to PoliticaEscalamiento{paso}
   PasoEscalamiento{rotacion(nombre)} to Rotacion{paso}
+  EjecucionDeEscalamiento{incidente(titulo) required} to Incidente{ejecucionDeEscalamiento}
+  EjecucionDeEscalamiento{paso(orden)} to PasoEscalamiento{ejecucion}
 
   Notificacion{incidente(titulo) required} to Incidente{notificacion}
   AccionCorrectiva{postmortem(titulo) required} to Postmortem{accion}
@@ -291,6 +317,7 @@ relationship ManyToOne {
   PasoEscalamiento{destinatarioDirecto(login)} to User with builtInEntity
   Notificacion{destinatario(login) required} to User with builtInEntity
   AccionCorrectiva{responsable(login)} to User with builtInEntity
+  EjecucionDeEscalamiento{destinatario(login)} to User with builtInEntity
 }
 
 // ---------------------------------------------------------------------
@@ -301,6 +328,6 @@ dto * with mapstruct
 service all with serviceClass
 
 paginate Incidente, Alerta, Postmortem with pagination
-paginate EventoDeIncidente, Notificacion, TurnoDeGuardia with infinite-scroll
+paginate EventoDeIncidente, Notificacion, TurnoDeGuardia, EjecucionDeEscalamiento with infinite-scroll
 
 filter Incidente, Alerta, Servicio, Notificacion

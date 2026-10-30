@@ -1,0 +1,88 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (ejecucionDeEscalamiento(); as ejecucionDeEscalamientoRef) {
+      <div>
+        <h2 data-cy="ejecucionDeEscalamientoDetailsHeading">
+          <span jhiTranslate="oncallApp.ejecucionDeEscalamiento.detail.title">Ejecucion De Escalamiento</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ ejecucionDeEscalamientoRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.ejecucionDeEscalamiento.vuelta">Vuelta</span></dt>
+          <dd>
+            <span>{{ ejecucionDeEscalamientoRef.vuelta }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.ejecucionDeEscalamiento.nivel">Nivel</span></dt>
+          <dd>
+            <span>{{ ejecucionDeEscalamientoRef.nivel }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.ejecucionDeEscalamiento.resultado">Resultado</span></dt>
+          <dd>
+            <span [jhiTranslate]="'oncallApp.ResultadoEscalamiento.' + (ejecucionDeEscalamientoRef.resultado ?? 'null')">{{
+              {
+                null: '',
+                NOTIFICADO: 'NOTIFICADO',
+                SIN_DESTINATARIO: 'SIN_DESTINATARIO',
+                SIN_POLITICA: 'SIN_POLITICA',
+                AGOTADO: 'AGOTADO',
+              }[ejecucionDeEscalamientoRef.resultado ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.ejecucionDeEscalamiento.ejecutadoEn">Ejecutado En</span></dt>
+          <dd>
+            <span>{{ ejecucionDeEscalamientoRef.ejecutadoEn | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.ejecucionDeEscalamiento.proximoEn">Proximo En</span></dt>
+          <dd>
+            <span>{{ ejecucionDeEscalamientoRef.proximoEn | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.ejecucionDeEscalamiento.detalle">Detalle</span></dt>
+          <dd>
+            <span>{{ ejecucionDeEscalamientoRef.detalle }}</span>
+          </dd>
+          <dt><span jhiTranslate="oncallApp.ejecucionDeEscalamiento.incidente">Incidente</span></dt>
+          <dd>
+            @if (ejecucionDeEscalamiento()!.incidente) {
+              <div>
+                <a [routerLink]="['/incidente', ejecucionDeEscalamiento()!.incidente?.id, 'view']">{{
+                  ejecucionDeEscalamientoRef.incidente?.titulo
+                }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="oncallApp.ejecucionDeEscalamiento.paso">Paso</span></dt>
+          <dd>
+            @if (ejecucionDeEscalamiento()!.paso) {
+              <div>
+                <a [routerLink]="['/paso-escalamiento', ejecucionDeEscalamiento()!.paso?.id, 'view']">{{
+                  ejecucionDeEscalamientoRef.paso?.orden
+                }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="oncallApp.ejecucionDeEscalamiento.destinatario">Destinatario</span></dt>
+          <dd>
+            <span>{{ ejecucionDeEscalamientoRef.destinatario?.login }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/ejecucion-de-escalamiento', ejecucionDeEscalamientoRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

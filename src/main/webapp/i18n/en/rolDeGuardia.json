@@ -1,0 +1,9 @@
+{
+  "oncallApp": {
+    "RolDeGuardia": {
+      "null": "",
+      "PRIMARIO": "PRIMARIO",
+      "SECUNDARIO": "SECUNDARIO"
+    }
+  }
+}
